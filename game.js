@@ -155,7 +155,7 @@ async function init() {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 2.2;  // Even brighter
+    renderer.toneMappingExposure = 3.0;  // Very bright
     document.getElementById('canvas-wrap').appendChild(renderer.domElement);
     
     // Camera
@@ -222,7 +222,7 @@ function setupLights() {
     scene.add(lights.dir.target);
     
     // Ambient fill
-    lights.ambient = new THREE.AmbientLight(0xffead0, 0.7);
+    lights.ambient = new THREE.AmbientLight(0xfff5e0, 1.0);
     scene.add(lights.ambient);
 }
 
@@ -231,19 +231,19 @@ function updateLights() {
     const dayFactor = Math.sin(timeOfDay * Math.PI);
     const isDay = dayFactor > 0;
     
-    lights.hemi.intensity = Math.max(0.8, 0.4 + dayFactor * 0.4);
-    lights.hemi.color.setHex(isDay ? 0xfff0dd : 0x555566);
-    lights.hemi.groundColor.setHex(isDay ? 0xaa8866 : 0x222233);
+    lights.hemi.intensity = Math.max(1.2, 0.4 + dayFactor * 0.4);
+    lights.hemi.color.setHex(isDay ? 0xfff0dd : 0x777788);
+    lights.hemi.groundColor.setHex(isDay ? 0xaa8866 : 0x444455);
     
-    lights.dir.intensity = Math.max(1.0, 0.5 + Math.max(0, dayFactor) * 0.8);
-    lights.dir.color.setHex(isDay ? 0xffffee : 0x665544);
+    lights.dir.intensity = Math.max(1.5, 0.5 + Math.max(0, dayFactor) * 0.8);
+    lights.dir.color.setHex(isDay ? 0xffffee : 0x887766);
     
     // Follow player
     if (playerGroup) {
         lights.dir.target.position.set(playerGroup.position.x, 0, playerZ + 20);
     }
     
-    lights.ambient.intensity = Math.max(0.5, 0.2 + dayFactor * 0.3);
+    lights.ambient.intensity = Math.max(0.8, 0.2 + dayFactor * 0.3);
 }
 
 // ================= ENVIRONMENT (Buildings) =================
@@ -1587,12 +1587,12 @@ function updateCamera(dt) {
 
 // ================= BIOMES & WEATHER =================
 const BIOMES = [
-    { name: 'URBAN_DAY', skyColor: 0x6ec6ff, fogColor: 0x88c0ff, groundColor: 0x7ec860, weather: 'none' },
-    { name: 'URBAN_SUNSET', skyColor: 0xff8850, fogColor: 0xff9960, groundColor: 0xa87040, weather: 'none' },
-    { name: 'URBAN_NIGHT', skyColor: 0x2a3a5a, fogColor: 0x3a4a6a, groundColor: 0x3a4a5a, weather: 'none' },
-    { name: 'RAINY', skyColor: 0x6a7a8a, fogColor: 0x7a8a9a, groundColor: 0x6a6a6a, weather: 'rain' },
-    { name: 'STORM', skyColor: 0x3a3a4a, fogColor: 0x4a4a5a, groundColor: 0x4a4a4a, weather: 'storm' },
-    { name: 'SNOW', skyColor: 0xbbddff, fogColor: 0x99bbdd, groundColor: 0xffffff, weather: 'snow' },
+    { name: 'URBAN_DAY', skyColor: 0x88d0ff, fogColor: 0xaaddff, groundColor: 0x9ed070, weather: 'none' },
+    { name: 'URBAN_SUNSET', skyColor: 0xffaa60, fogColor: 0xffbb80, groundColor: 0xc88050, weather: 'none' },
+    { name: 'URBAN_NIGHT', skyColor: 0x3a5a7a, fogColor: 0x5a7a9a, groundColor: 0x5a6a7a, weather: 'none' },
+    { name: 'RAINY', skyColor: 0x7a9aab, fogColor: 0x9abac9, groundColor: 0x8a8a8a, weather: 'rain' },
+    { name: 'STORM', skyColor: 0x4a5a6a, fogColor: 0x6a7a8a, groundColor: 0x6a6a6a, weather: 'storm' },
+    { name: 'SNOW', skyColor: 0xcceeff, fogColor: 0xaaddff, groundColor: 0xffffff, weather: 'snow' },
 ];
 
 function updateBiomeColors() {
