@@ -154,7 +154,7 @@ async function init() {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.4;  // Brighter exposure
+    renderer.toneMappingExposure = 1.8;  // Much brighter exposure
     document.getElementById('canvas-wrap').appendChild(renderer.domElement);
     
     // Camera
@@ -201,12 +201,13 @@ async function init() {
 const lights = {};
 function setupLights() {
     // Hemisphere - sky/ground blend
-    lights.hemi = new THREE.HemisphereLight(0xffeedd, 0x6688aa, 0.8);
+    lights.hemi = new THREE.HemisphereLight(0xfff0dd, 0xaa8866, 1.0);
     scene.add(lights.hemi);
     
-    // Directional - warm sun
-    lights.dir = new THREE.DirectionalLight(0xfff5e0, 1.4);
-    lights.dir.position.set(8, 15, 10);
+    // Directional - warm sun (will follow player)
+    lights.dir = new THREE.DirectionalLight(0xffffee, 1.6);
+    lights.dir.position.set(0, 20, 10);
+    lights.dir.target.position.set(0, 0, 0);
     lights.dir.castShadow = true;
     lights.dir.shadow.mapSize.set(1024, 1024);
     lights.dir.shadow.camera.near = 5;
@@ -217,9 +218,10 @@ function setupLights() {
     lights.dir.shadow.camera.bottom = -30;
     lights.dir.shadow.bias = -0.0005;
     scene.add(lights.dir);
+    scene.add(lights.dir.target);
     
     // Ambient fill
-    lights.ambient = new THREE.AmbientLight(0x8899aa, 0.5);
+    lights.ambient = new THREE.AmbientLight(0xffead0, 0.7);
     scene.add(lights.ambient);
 }
 
@@ -228,14 +230,19 @@ function updateLights() {
     const dayFactor = Math.sin(timeOfDay * Math.PI);
     const isDay = dayFactor > 0;
     
-    lights.hemi.intensity = 0.4 + dayFactor * 0.4;
-    lights.hemi.color.setHex(isDay ? 0xffeedd : 0x334455);
-    lights.hemi.groundColor.setHex(isDay ? 0x445566 : 0x111122);
+    lights.hemi.intensity = Math.max(0.8, 0.4 + dayFactor * 0.4);
+    lights.hemi.color.setHex(isDay ? 0xfff0dd : 0x555566);
+    lights.hemi.groundColor.setHex(isDay ? 0xaa8866 : 0x222233);
     
-    lights.dir.intensity = 0.5 + Math.max(0, dayFactor) * 0.8;
-    lights.dir.color.setHex(isDay ? 0xfff5e0 : 0x445566);
+    lights.dir.intensity = Math.max(1.0, 0.5 + Math.max(0, dayFactor) * 0.8);
+    lights.dir.color.setHex(isDay ? 0xffffee : 0x665544);
     
-    lights.ambient.intensity = 0.2 + dayFactor * 0.3;
+    // Follow player
+    if (playerGroup) {
+        lights.dir.target.position.set(playerGroup.position.x, 0, playerZ + 20);
+    }
+    
+    lights.ambient.intensity = Math.max(0.5, 0.2 + dayFactor * 0.3);
 }
 
 // ================= ENVIRONMENT (Buildings) =================
@@ -1598,7 +1605,7 @@ function updateBiomeColors() {
     const groundColor = lerpColor(biome.groundColor, nextBiome.groundColor, t);
     
     scene.background = new THREE.Color(skyColor);
-    scene.fog = new THREE.Fog(fogColor, 120, 300);  // Fog starts much further
+    scene.fog = new THREE.Fog(fogColor, 180, 400);  // Fog starts much further
     renderer.setClearColor(skyColor);
     
     // Update ground color (would need to re-create or use material reference)
