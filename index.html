@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="viewport-fit=cover width=device-width initial-scale=1 maximum-scale=1 user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#5b9ee0">
+    <title>Subway Surfers 3D</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="canvas-wrap"></div>
+        
+        <!-- Mobile tap zones -->
+        <div id="tap-zones" aria-hidden="true">
+            <div class="tap-zone" id="zone-left"><span>← LINE</span></div>
+            <div class="tap-zone" id="zone-jump"><span>JUMP</span></div>
+            <div class="tap-zone" id="zone-right"><span>LINE →</span></div>
+        </div>
+
+        <!-- Loading screen -->
+        <div id="loading-screen">
+            <div class="spinner"></div>
+            <p id="loading-text">Loading...</p>
+        </div>
+
+        <!-- Start screen -->
+        <div id="start-screen" class="overlay">
+            <div class="screen-content">
+                <h1>SUBWAY SURFERS 3D</h1>
+                <p class="subtitle">Endless Runner</p>
+                <button id="start-btn" class="btn-primary">TAP TO START</button>
+                <div class="controls-hint">
+                    <span class="hint-key">←</span> <span>LEFT</span>
+                    <span class="hint-key">↑</span> <span>JUMP</span>
+                    <span class="hint-key">→</span> <span>RIGHT</span>
+                    <span class="hint-key">↓</span> <span>ROLL</span>
+                </div>
+                <div class="stats-preview">
+                    <div class="stat"><span id="high-score-preview">0</span> BEST</div>
+                    <div class="stat"><span id="total-coins-preview">0</span> COINS</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game HUD -->
+        <div id="hud" class="overlay hidden">
+            <div class="hud-left">
+                <div class="score-box">
+                    <span class="label">SCORE</span>
+                    <span id="score" class="value">0</span>
+                </div>
+                <div class="coins-box">
+                    <span class="label">COINS</span>
+                    <span id="coins" class="value">0</span>
+                </div>
+            </div>
+            <div class="hud-center">
+                <div id="multiplier" class="multiplier hidden">×<span id="mult-value">1</span></div>
+                <div id="distance" class="distance">0m</div>
+            </div>
+            <div class="hud-right">
+                <button id="pause-btn" class="icon-btn" aria-label="Pause">⏸</button>
+                <button id="mute-btn" class="icon-btn" aria-label="Mute">🔊</button>
+            </div>
+        </div>
+
+        <!-- Pause menu -->
+        <div id="pause-menu" class="overlay hidden">
+            <div class="screen-content">
+                <h2>PAUSED</h2>
+                <button id="resume-btn" class="btn-primary">RESUME</button>
+                <button id="restart-btn" class="btn-secondary">RESTART</button>
+                <button id="menu-btn" class="btn-secondary">MAIN MENU</button>
+            </div>
+        </div>
+
+        <!-- Game Over screen -->
+        <div id="gameover-screen" class="overlay hidden">
+            <div class="screen-content">
+                <h2>GAME OVER</h2>
+                <div class="final-stats">
+                    <div class="final-stat">
+                        <span class="label">SCORE</span>
+                        <span id="final-score" class="value">0</span>
+                    </div>
+                    <div class="final-stat">
+                        <span class="label">DISTANCE</span>
+                        <span id="final-distance" class="value">0m</span>
+                    </div>
+                    <div class="final-stat">
+                        <span class="label">COINS</span>
+                        <span id="final-coins" class="value">0</span>
+                    </div>
+                </div>
+                <button id="play-again-btn" class="btn-primary">PLAY AGAIN</button>
+                <button id="main-menu-btn" class="btn-secondary">MAIN MENU</button>
+            </div>
+        </div>
+
+        <!-- Biome transition flash -->
+        <div id="biome-flash"></div>
+
+        <!-- FPS counter (debug) -->
+        <div id="fps-counter" class="hidden">FPS: 0</div>
+    </div>
+
+    <!-- Three.js local -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "./three.module.js"
+        }
+    }
+    </script>
+    <script type="module" src="game.js"></script>
+</body>
+</html>
