@@ -53,13 +53,13 @@ const CFG = {
         SKY_SUNSET: 0xff6b35,
         WALL: 0xd94f2a,
         WALL_TOP: 0xc04428,
-        HEDGE: 0x3a9e5c,
-        HEDGE_DARK: 0x2a8a4c,
-        ROAD: 0x9a8a6a,
-        ROAD_EDGE: 0x7a6a50,
-        RAIL: 0x888888,
-        SLEEPER: 0x553311,
-        GROUND: 0x6a9a5a,
+        HEDGE: 0x4abf6c,
+        HEDGE_DARK: 0x3aab5c,
+        ROAD: 0xbabb8a,
+        ROAD_EDGE: 0x9a8a60,
+        RAIL: 0xaaaaaa,
+        SLEEPER: 0x664411,
+        GROUND: 0x7ec860,
         COIN: 0xffdd44,
         COIN_EMISSIVE: 0xffcc00,
         OBSTACLE: 0xff5533,
@@ -68,9 +68,9 @@ const CFG = {
         POWERUP_MAGNET: 0x66ddff,
         POWERUP_JETPACK: 0xff8844,
         POWERUP_BOOST: 0x44ff88,
-        BUILDING_1: 0x8a7a6a,
-        BUILDING_2: 0x9a8a7a,
-        BUILDING_3: 0x7a6a5a,
+        BUILDING_1: 0x9a8a7a,
+        BUILDING_2: 0xaa9a8a,
+        BUILDING_3: 0x8a7a6a,
     },
     
     // Particle
@@ -112,7 +112,7 @@ let lastTime = 0;
 let biomeIndex = 0;
 let biomeProgress = 0;
 let weatherIntensity = 0; // 0-1
-let timeOfDay = 0.25; // 0=night, 0.25=morning, 0.5=day
+let timeOfDay = 0.3; // 0=night, 0.25=morning, 0.3=bright morning, 0.5=day
 let audioContext = null;
 let isMuted = false;
 let isPaused = false;
@@ -147,6 +147,7 @@ async function init() {
         antialias: true,
         alpha: false,
         powerPreference: 'high-performance',
+        preserveDrawingBuffer: true,
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -154,7 +155,7 @@ async function init() {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.8;  // Much brighter exposure
+    renderer.toneMappingExposure = 2.2;  // Even brighter
     document.getElementById('canvas-wrap').appendChild(renderer.domElement);
     
     // Camera
@@ -1586,12 +1587,12 @@ function updateCamera(dt) {
 
 // ================= BIOMES & WEATHER =================
 const BIOMES = [
-    { name: 'URBAN_DAY', skyColor: 0x5b9ee0, fogColor: 0x5b9ee0, groundColor: 0x6a9a5a, weather: 'none' },
-    { name: 'URBAN_SUNSET', skyColor: 0xff6b35, fogColor: 0xff6b35, groundColor: 0x8a5a3a, weather: 'none' },
-    { name: 'URBAN_NIGHT', skyColor: 0x1a2a4a, fogColor: 0x1a2a4a, groundColor: 0x2a3a4a, weather: 'none' },
-    { name: 'RAINY', skyColor: 0x4a5a6a, fogColor: 0x4a5a6a, groundColor: 0x5a5a5a, weather: 'rain' },
-    { name: 'STORM', skyColor: 0x2a2a3a, fogColor: 0x2a2a3a, groundColor: 0x3a3a3a, weather: 'storm' },
-    { name: 'SNOW', skyColor: 0xaaccff, fogColor: 0x88aacc, groundColor: 0xffffff, weather: 'snow' },
+    { name: 'URBAN_DAY', skyColor: 0x6ec6ff, fogColor: 0x88c0ff, groundColor: 0x7ec860, weather: 'none' },
+    { name: 'URBAN_SUNSET', skyColor: 0xff8850, fogColor: 0xff9960, groundColor: 0xa87040, weather: 'none' },
+    { name: 'URBAN_NIGHT', skyColor: 0x2a3a5a, fogColor: 0x3a4a6a, groundColor: 0x3a4a5a, weather: 'none' },
+    { name: 'RAINY', skyColor: 0x6a7a8a, fogColor: 0x7a8a9a, groundColor: 0x6a6a6a, weather: 'rain' },
+    { name: 'STORM', skyColor: 0x3a3a4a, fogColor: 0x4a4a5a, groundColor: 0x4a4a4a, weather: 'storm' },
+    { name: 'SNOW', skyColor: 0xbbddff, fogColor: 0x99bbdd, groundColor: 0xffffff, weather: 'snow' },
 ];
 
 function updateBiomeColors() {
@@ -1605,7 +1606,7 @@ function updateBiomeColors() {
     const groundColor = lerpColor(biome.groundColor, nextBiome.groundColor, t);
     
     scene.background = new THREE.Color(skyColor);
-    scene.fog = new THREE.Fog(fogColor, 180, 400);  // Fog starts much further
+    scene.fog = new THREE.Fog(fogColor, 250, 600);  // Fog starts very far
     renderer.setClearColor(skyColor);
     
     // Update ground color (would need to re-create or use material reference)
